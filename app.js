@@ -6,8 +6,10 @@ const { Server } = require('socket.io');
 const http = require('http');
 const passport = require('passport');
 const session = require('express-session');
+const router = require('./routes/api');
 
 require('dotenv').config();
+require('./auth/auth.js');
 
 const app = express();
 
@@ -17,9 +19,6 @@ app.use(cors({
   methods: 'GET,HEAD,POST',
   optionsSuccessStatus: 204
 }));
-
-app.use(passport.initialize());
-app.use(passport.session());
 
 const server = http.createServer(app);
 
@@ -35,3 +34,5 @@ app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: false }));
 
 server.listen(5000, () => console.log('Server running on port 5000!'));
+
+app.use('/api', router);
