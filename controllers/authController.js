@@ -78,9 +78,26 @@ exports.login = (req, res, next) => {
         next(err);
       }
       const token = jwt.sign(user.toJSON(), process.env.JWT_SECRET);
-      console.log('logging in')
       return res.json({user, token});
     })
   })
   (req, res);
 };
+
+exports.loginFacebook = passport.authenticate('facebook', { scope: "public_profile" })
+
+exports.loginFacebookCallback = passport.authenticate("facebook", {
+  successRedirect: "http://localhost:3000",
+  failureRedirect: "/login/failed",
+  failureMessage: true
+})
+
+exports.loginSuccess = (req, res, next) => {
+  if (req.user) {
+    res.status(200).json({
+      success: true,
+      message: "successful",
+      user: req.user
+    });
+  }
+}

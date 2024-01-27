@@ -70,3 +70,31 @@ passport.use(
     }
   )
 );
+
+passport.use(
+  new FacebookStrategy(
+    {
+      clientID: process.env.FACEBOOK_CLIENT_ID,
+      clientSecret: process.env.FACEBOOK_SECRET_KEY,
+      callbackURL: process.env.FACEBOOK_CALLBACK_URL,
+    },
+    async function (accessToken, refreshToken, profile, cb) {
+      const user = await User.findOne({
+        accountId: profile.id,
+        provider: 'facebook',
+      });
+      if (!user) {
+        const user = new User({
+          accountId: profile.id,
+          name: profile.displayName,
+          provider: profile.provider,
+        });
+        await user.save();
+        return cb(null, profile);
+      }
+      else {
+        return cb(null, profile);
+      }
+    }
+  )
+);
