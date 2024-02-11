@@ -9,6 +9,10 @@ router.post('/signup', authController.signup);
 
 router.post('/login', authController.login);
 
-router.get('/users/not-followers', userController.getNotFollowers);
+router.get('/:userId/followings', userController.getFollowings);
+
+router.get('/users/may-know', userController.getMayKnow);
+
+router.post('/:userId/follow', userController.follow);
 
 module.exports = router;

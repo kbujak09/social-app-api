@@ -5,7 +5,8 @@ const UserSchema = new Schema({
   username: { type: String, required: true, maxLength: 16, minLength: 3 },
   password: { type: String, required: true, minLength: 8 },
   avatar: { type: String, required: true, default: randomAvatar()},
-  followers: [{ type: Schema.Types.ObjectId, ref: 'User' }]
+  followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  followings: [{ type: Schema.Types.ObjectId, ref: 'User' }]
 }, { timestamps: true });
 
 function randomAvatar() {

@@ -1,24 +1,80 @@
 const asyncHandler = require('express-async-handler');
 const User = require('../models/user');
 
-exports.getNotFollowers = asyncHandler(async (req, res, next) => {
+  exports.getMayKnow = asyncHandler(async (req, res, next) => {
+    try {
+      const { userId } = req.query;  
+      const user = await User.findById(userId);
+
+      if (!user) {
+        return res.status(404).json({error: 'User not found'});
+      }
+
+      const notFollowed = await User.find({
+        _id: { $ne: userId, $nin: user.followings }
+      });
+
+      console.log(notFollowed)
+
+      return res.json(notFollowed);
+    }
+    catch(err) {
+      console.error('Error while fetching users', err);
+      return res.status(500).json({ error: 'Fetching error' });
+    } 
+  });
+
+exports.getFollowings = asyncHandler(async (req, res, next) => {
   try {
-    const { userId } = req.query;  
+    const { userId } = req.params;
     const user = await User.findById(userId);
 
     if (!user) {
       return res.status(404).json({error: 'User not found'});
     }
 
-    const notFollowers = await User.find({
-      _id: { $ne: userId },
-      followers: { $nin: user.followers }
-    });
+    const followings = user.followings;
 
-    return res.json(notFollowers);
+    res.status(200).json(followings);
   }
-  catch(err) {
-    console.error('Error while fetching users', err);
-    return res.status(500).json({ error: 'Fetching error' });
-  } 
+  catch (err) {
+    console.error(err);
+  }
+});
+
+exports.follow = asyncHandler(async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const { followedId } = req.query;
+
+    const [ user, followed ] = await Promise.all([
+      User.findById(userId),
+      User.findById(followedId)
+    ]);
+
+    if (!user) {
+      res.status(404).json({error: 'You need to log in'});
+    }
+    else if (!followed) {
+      res.status(404).json({error: 'Profile not found'});
+    }
+
+    await Promise.all([
+      User.findByIdAndUpdate(
+        userId,
+        { $addToSet: { followings: followed._id } },
+        { new: true }
+      ),
+      User.findByIdAndUpdate(
+        followedId,
+        { $addToSet: { followers: user._id } },
+        { new: true }
+      ) 
+    ]);
+
+    res.status(200).json({ message: 'Successfully followed user'});
+  }
+  catch (err) {
+    console.error(err);
+  }
 });
