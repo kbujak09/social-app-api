@@ -14,8 +14,6 @@ const User = require('../models/user');
         _id: { $ne: userId, $nin: user.followings }
       });
 
-      console.log(notFollowed)
-
       return res.json(notFollowed);
     }
     catch(err) {
@@ -27,7 +25,7 @@ const User = require('../models/user');
 exports.getFollowings = asyncHandler(async (req, res, next) => {
   try {
     const { userId } = req.params;
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).populate('followings');
 
     if (!user) {
       return res.status(404).json({error: 'User not found'});
