@@ -76,3 +76,58 @@ exports.follow = asyncHandler(async (req, res, next) => {
     console.error(err);
   }
 });
+
+exports.unfollow = asyncHandler(async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const { followedId } = req.query;
+
+    const [ user, followed ] = await Promise.all([
+      User.findById(userId),
+      User.findById(followedId)
+    ]);
+
+    if (!user) {
+      res.status(404).json({error: 'You need to log in'});
+    }
+    else if (!followed) {
+      res.status(404).json({error: 'Profile not found'});
+    }
+
+    await Promise.all([
+      User.findByIdAndUpdate(
+        userId,
+        { $pull: { followings: followed._id } }
+      ),
+      User.findByIdAndUpdate(
+        followedId,
+        { $pull: { followers: user._id } }
+      ) 
+    ]);
+
+    res.status(200).json({ message: 'Successfully followed user'});
+  }
+  catch (err) {
+    console.error(err);
+  }
+});
+
+exports.getUser = asyncHandler(async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findById(userId)
+      .populate({
+        path: 'followers',
+        select: 'username'
+      })
+      .populate({
+        path: 'followings',
+        select: 'username'
+      });
+
+    res.status(202).json(user);
+  }
+  catch(err) {
+    console.log(err.message);
+  }
+});

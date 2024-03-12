@@ -1,16 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const UserSchema = new Schema({
-  username: { type: String, required: true, maxLength: 16, minLength: 3 },
-  password: { type: String, required: true, minLength: 8 },
-  avatar: { type: String, required: true, default: randomAvatar()},
-  followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-  followings: [{ type: Schema.Types.ObjectId, ref: 'User' }]
-}, { timestamps: true });
-
-function randomAvatar() {
-  const avatars = 
+const avatars = 
     [
       'avatar1', 
       'avatar2', 
@@ -21,7 +12,13 @@ function randomAvatar() {
       'avatar7', 
       'avatar8'
     ]
-    return avatars[Math.floor(Math.random() * 8) + 1];
-}
+
+const UserSchema = new Schema({
+  username: { type: String, required: true, maxLength: 16, minLength: 3 },
+  password: { type: String, required: true, minLength: 8 },
+  avatar: { type: String, required: true, default: avatars[Math.floor(Math.random() * 8) + 1]},
+  followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  followings: [{ type: Schema.Types.ObjectId, ref: 'User' }]
+}, { timestamps: true });
 
 module.exports = mongoose.model('User', UserSchema);
