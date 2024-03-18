@@ -18,7 +18,8 @@ const UserSchema = new Schema({
   password: { type: String, required: true, minLength: 8 },
   avatar: { type: String, required: true, default: avatars[Math.floor(Math.random() * 8) + 1]},
   followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-  followings: [{ type: Schema.Types.ObjectId, ref: 'User' }]
+  followings: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }]
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', UserSchema);

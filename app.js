@@ -40,7 +40,7 @@ async function main() {
 };
 
 app.use(bodyparser.json());
-app.use(bodyparser.urlencoded({ extended: false }));
+app.use(bodyparser.urlencoded({ extended: true }));
 
 server.listen(5000, () => console.log('Server running on port 5000!'));
 
