@@ -10,7 +10,9 @@ router.post('/signup', authController.signup);
 
 router.post('/login', authController.login);
 
-router.get('/users/:userId/followings', userController.getFollowings);
+router.get('/users/:userId/following', userController.getFollowing);
+
+router.get('/users/:userId/followers', userController.getFollowers);
 
 router.get('/users/may-know', userController.getMayKnow);
 
@@ -21,5 +23,7 @@ router.post('/users/:userId/unfollow', userController.unfollow);
 router.get('/users/:userId', userController.getUser);
 
 router.post('/posts', postController.createPost);
+
+router.get('/posts', postController.getPostsForUser);
 
 module.exports = router;

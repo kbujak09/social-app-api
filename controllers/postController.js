@@ -17,7 +17,11 @@ exports.createPost = asyncHandler(async (req, res, next) => {
     });
 
     await post.save();
-    console.log(post.text)
+
+    author.posts.push(post._id);
+
+    await author.save();
+
     return res.status(200).json(post);
     }
   catch (err) {
@@ -25,13 +29,23 @@ exports.createPost = asyncHandler(async (req, res, next) => {
   }
 });
 
-exports.getUserPosts = asyncHandler(async (req, res, next) => {
+exports.getPostsForUser = asyncHandler(async (req, res, next) => {
   try {
-    const user = User.findById(req.query.userId);
+    const { userId } = req.query;
 
-     
+    const user = await User.findById(userId).populate('following');
+    
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const followingIds = user.following.map(user => user._id);
+    
+    const followingPosts = await Post.find({ author: { $in: followingIds }}).populate('author');
+
+    return res.status(200).json(followingPosts);
   }
   catch (err) {
     console.log(err);
   }
-})
+});

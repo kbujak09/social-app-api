@@ -11,7 +11,7 @@ const User = require('../models/user');
       }
 
       const notFollowed = await User.find({
-        _id: { $ne: userId, $nin: user.followings }
+        _id: { $ne: userId, $nin: user.following }
       });
 
       return res.json(notFollowed);
@@ -22,18 +22,36 @@ const User = require('../models/user');
     } 
   });
 
-exports.getFollowings = asyncHandler(async (req, res, next) => {
+exports.getFollowing = asyncHandler(async (req, res, next) => {
   try {
     const { userId } = req.params;
-    const user = await User.findById(userId).populate('followings');
+    const user = await User.findById(userId).populate('following');
 
     if (!user) {
       return res.status(404).json({error: 'User not found'});
     }
 
-    const followings = user.followings;
+    const following = user.following;
 
-    res.status(200).json(followings);
+    res.status(200).json(following);
+  }
+  catch (err) {
+    console.error(err);
+  }
+});
+
+exports.getFollowers = asyncHandler(async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findById(userId).populate('followers');
+
+    if (!user) {
+      return res.status(404).json({error: 'User not found'});
+    }
+
+    const followers = user.followers;
+
+    res.status(200).json(followers);
   }
   catch (err) {
     console.error(err);
@@ -60,7 +78,7 @@ exports.follow = asyncHandler(async (req, res, next) => {
     await Promise.all([
       User.findByIdAndUpdate(
         userId,
-        { $addToSet: { followings: followed._id } },
+        { $addToSet: { following: followed._id } },
         { new: true }
       ),
       User.findByIdAndUpdate(
@@ -97,7 +115,7 @@ exports.unfollow = asyncHandler(async (req, res, next) => {
     await Promise.all([
       User.findByIdAndUpdate(
         userId,
-        { $pull: { followings: followed._id } }
+        { $pull: { following: followed._id } }
       ),
       User.findByIdAndUpdate(
         followedId,
@@ -121,7 +139,7 @@ exports.getUser = asyncHandler(async (req, res, next) => {
         select: 'username'
       })
       .populate({
-        path: 'followings',
+        path: 'following',
         select: 'username'
       });
 
