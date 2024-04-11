@@ -26,4 +26,6 @@ router.post('/posts', postController.createPost);
 
 router.get('/posts', postController.getPostsForUser);
 
+router.post('/users/:userId/remove', userController.removeFollower);
+
 module.exports = router;

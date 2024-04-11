@@ -123,7 +123,7 @@ exports.unfollow = asyncHandler(async (req, res, next) => {
       ) 
     ]);
 
-    res.status(200).json({ message: 'Successfully followed user'});
+    res.status(200).json({ message: 'Successfully unfollowed user'});
   }
   catch (err) {
     console.error(err);
@@ -149,3 +149,41 @@ exports.getUser = asyncHandler(async (req, res, next) => {
     console.log(err.message);
   }
 });
+
+exports.removeFollower = asyncHandler(async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const { followerId } = req.query;
+
+    console.log(userId, followerId)
+
+    const [ user, follower ] = await Promise.all([
+      User.findById(userId),
+      User.findById(followerId)
+    ]);
+
+    if (!user) {
+      res.status(404).json({error: 'You need to log in'});
+    }
+    else if (!follower) {
+      res.status(404).json({error: 'Profile not found'});
+    }
+
+    await Promise.all([
+      User.findByIdAndUpdate(
+        userId,
+        { $pull: { followers: follower._id } }
+      ),
+      User.findByIdAndUpdate(
+        followerId,
+        { $pull: { following: user._id } }
+      ) 
+    ]);
+
+    console.log('pablo')
+    res.status(200).json({ message: 'Successfully removed followers'});
+  }
+  catch (err) {
+    console.log(err.message);
+  }
+})
