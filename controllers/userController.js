@@ -88,7 +88,7 @@ exports.follow = asyncHandler(async (req, res, next) => {
       ) 
     ]);
 
-    res.status(200).json({ message: 'Successfully followed user'});
+    res.status(200).json({ message: 'Successfully followed user', user: followed });
   }
   catch (err) {
     console.error(err);
