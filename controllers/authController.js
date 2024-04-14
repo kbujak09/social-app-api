@@ -20,7 +20,7 @@ exports.signup = [
     .withMessage('No spaces are allowed in the username.')
     .trim()
     .isLength({min: 8})
-    .withMessage('Username must contain at least 8 characters.')
+    .withMessage('Password must contain at least 8 characters.')
     .escape(),
   body('confirm', 'Passwords do not match.')
     .custom((value, { req }) => value === req.body.password),

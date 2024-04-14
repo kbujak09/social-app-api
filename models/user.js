@@ -16,7 +16,9 @@ const avatars =
 const UserSchema = new Schema({
   username: { type: String, required: true, maxLength: 16, minLength: 3 },
   password: { type: String, required: true, minLength: 8 },
-  avatar: { type: String, required: true, default: avatars[Math.floor(Math.random() * 8) + 1]},
+  avatar: { type: String, required: true,     default: function() {
+    return avatars[Math.floor(Math.random() * avatars.length)];
+  }},
   followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
