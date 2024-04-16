@@ -75,7 +75,7 @@ exports.getUserPosts = asyncHandler(async (req, res, next) => {
   try {
     const { userId } = req.params;
 
-    const posts = await Post.find({ author: userId });
+    const posts = await Post.find({ author: userId }).populate('author');
 
     res.json(posts);
   }
