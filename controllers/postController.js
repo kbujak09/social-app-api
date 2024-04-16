@@ -25,7 +25,7 @@ exports.createPost = asyncHandler(async (req, res, next) => {
     return res.status(200).json(post);
     }
   catch (err) {
-    console.log(err);
+    console.error(err);
   }
 });
 
@@ -46,6 +46,40 @@ exports.getPostsForUser = asyncHandler(async (req, res, next) => {
     return res.status(200).json(followingPosts);
   }
   catch (err) {
-    console.log(err);
+    console.error(err);
   }
 });
+
+exports.handlePostLike = asyncHandler(async (req, res, next) => {
+  try {
+    const { postId } = req.params;
+    const { userId } = req.query;
+
+    const post = await Post.findById(postId);
+
+    if (post.likes.includes(userId)) {
+      await Post.updateOne({ _id: postId }, { $pull: { likes: userId }});
+    }
+    else {
+      await Post.updateOne({ _id: postId }, { $push: { likes: userId } });
+    }
+
+    return res.json(post);
+  }
+  catch (err) {
+    console.error(err);
+  }
+});
+
+exports.getUserPosts = asyncHandler(async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+
+    const posts = await Post.find({ author: userId });
+
+    res.json(posts);
+  }
+  catch (err) {
+    console.error(err);
+  }
+})

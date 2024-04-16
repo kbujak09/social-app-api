@@ -16,9 +16,9 @@ router.get('/users/:userId/followers', userController.getFollowers);
 
 router.get('/users/may-know', userController.getMayKnow);
 
-router.post('/users/:userId/follow', userController.follow);
+router.post('/users/:userId/following', userController.follow);
 
-router.post('/users/:userId/unfollow', userController.unfollow);
+router.delete('/users/:userId/following', userController.unfollow);
 
 router.get('/users/:userId', userController.getUser);
 
@@ -26,6 +26,10 @@ router.post('/posts', postController.createPost);
 
 router.get('/posts', postController.getPostsForUser);
 
-router.post('/users/:userId/remove', userController.removeFollower);
+router.delete('/users/:userId', userController.removeFollower);
+
+router.post('/posts/:postId/likes', postController.handlePostLike);
+
+router.get('/posts/:userId', postController.getUserPosts);
 
 module.exports = router;
