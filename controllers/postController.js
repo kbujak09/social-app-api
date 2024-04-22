@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const Post = require('../models/post');
 const User = require('../models/user');
+const Comment = require('../models/comment');
 
 exports.createPost = asyncHandler(async (req, res, next) => {
   try {
@@ -82,4 +83,32 @@ exports.getUserPosts = asyncHandler(async (req, res, next) => {
   catch (err) {
     console.error(err);
   }
-})
+});
+
+exports.createComment = asyncHandler(async (req, res, next) => {
+  try {
+    const { postId } = req.params;
+
+    const user = await User.findById(req.body.author);
+
+    const comment = new Comment({
+      author: user,
+      text: req.body.text
+    });
+
+    await Post.updateOne({ _id: postId }, { $push: { comments: comment }});
+
+    await comment.save();
+
+    return res.json(comment);
+  }
+  catch (err) {
+    console.error(err);
+  }
+});
+
+// exports.getPostComments = asyncHandler(async (req, res, next) => {
+//   try {
+//     const {}
+//   }
+// })

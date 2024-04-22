@@ -32,4 +32,6 @@ router.post('/posts/:postId/likes', postController.handlePostLike);
 
 router.get('/posts/:userId', postController.getUserPosts);
 
+router.post('/posts/:postId/comment', postController.createComment);
+
 module.exports = router;
