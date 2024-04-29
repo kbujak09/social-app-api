@@ -34,4 +34,10 @@ router.get('/posts/:userId', postController.getUserPosts);
 
 router.post('/posts/:postId/comment', postController.createComment);
 
+router.get('/posts/:postId/comments', postController.getComments);
+
+router.post('/comments/:commentId', postController.handleCommentLike);
+
+router.post('/posts/:postId/forward', postController.handlePostForward);
+
 module.exports = router;

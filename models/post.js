@@ -6,7 +6,7 @@ const PostSchema = new Schema({
   text: { type: String, maxLength: 120 },
   likes: [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }],
   comments: [{ type: Schema.Types.ObjectId, ref: 'Comment', default: [] }],
-  forwards: [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }]
+  forwards: [{ type: Schema.Types.ObjectId, ref: 'Forward', default: [] }],
 }, { timestamps: true })
 
 module.exports = mongoose.model('Post', PostSchema);
