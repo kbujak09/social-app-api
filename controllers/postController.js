@@ -27,7 +27,7 @@ exports.createPost = asyncHandler(async (req, res, next) => {
     return res.status(200).json(post);
     }
   catch (err) {
-    console.error(err);
+    return res.status(400).json({err: 'Creating post failed'});
   }
 });
 
@@ -64,7 +64,7 @@ exports.getPostsForUser = asyncHandler(async (req, res, next) => {
     return res.status(200).json(sortedData);
   }
   catch (err) {
-    console.error(err);
+    return res.status(400).json({err: 'Fetching posts failed'});
   }
 });
 
@@ -85,7 +85,7 @@ exports.handlePostLike = asyncHandler(async (req, res, next) => {
     return res.json(post);
   }
   catch (err) {
-    console.error(err);
+    return res.status(400).json({err: 'Reacting to post failed'});
   }
 });
 
@@ -104,7 +104,7 @@ exports.getUserPosts = asyncHandler(async (req, res, next) => {
     return res.json(sorted);
   }
   catch (err) {
-    console.error(err);
+    return res.status(400).json({err: 'Fetching profile posts failed'});
   }
 });
 
@@ -126,7 +126,7 @@ exports.createComment = asyncHandler(async (req, res, next) => {
     return res.json(comment);
   }
   catch (err) {
-    console.error(err);
+    return res.status(400).json({err: 'Creating comment failed'});
   }
 });
 
@@ -152,7 +152,7 @@ exports.getComments = asyncHandler(async (req, res, next) => {
     res.status(200).json(comments);
   }
   catch (err) {
-    console.error(err);
+    return res.status(400).json({err: 'Fetching comments failed'});
   }
 });
 
@@ -173,7 +173,7 @@ exports.handleCommentLike = asyncHandler(async (req, res, next) => {
     return res.json(comment);
   }
   catch (err) {
-    console.error(err);
+    return res.status(400).json({err: 'Reacting to comment failed'});
   }
 });
 
@@ -209,6 +209,6 @@ exports.handlePostForward = asyncHandler(async (req, res, next) => {
     return res.json(post);
   }
   catch (err) {
-    console.error(err);
+    return res.status(400).json({err: 'Forwarding post failed'});
   }
 });

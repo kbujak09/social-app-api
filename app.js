@@ -2,25 +2,27 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyparser = require('body-parser');
-const { Server } = require('socket.io');
 const http = require('http');
-const passport = require('passport');
-const session = require('express-session');
 const router = require('./routes/api');
+const compression = require('compression');
 
 require('dotenv').config();
 require('./auth/auth.js');
 
 const app = express();
 
-// app.use(cors({
-//   origin: 'http://localhost:3000',
-//   credentials: true,
-//   methods: 'GET,HEAD,POST',
-//   optionsSuccessStatus: 204
-// }));
+// const RateLimit = require('express-rate-limit');
+// const limiter = RateLimit({
+//   windowMs: 1 * 60 * 1000,
+//   max: 50,
+// });
+
+
+// app.use(limiter);
 
 app.use(cors());
+
+app.use(compression());
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -40,8 +42,8 @@ async function main() {
 };
 
 app.use(bodyparser.json());
-app.use(bodyparser.urlencoded({ extended: true }));
+app.use(bodyparser.urlencoded({ extended: false }));
 
-server.listen(5000, () => console.log('Server running on port 5000!'));
+server.listen(3000, () => console.log('Server running on port 3000!'));
 
 app.use('/api', router);
