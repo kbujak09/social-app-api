@@ -4,8 +4,6 @@ const bcrypt = require('bcryptjs');
 const passportJWT = require('passport-jwt');
 const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
-const FacebookStrategy = require('passport-facebook').Strategy;
-const FacebookTokenStrategy = require('passport-facebook-token');
 const User = require('../models/user');
 
 require('dotenv').config();
@@ -42,59 +40,3 @@ passport.use(new JWTStrategy({
     }
   }
 ));
-
-passport.use(
-  new FacebookStrategy(
-    {
-      clientID: process.env.FACEBOOK_CLIENT_ID,
-      clientSecret: process.env.FACEBOOK_SECRET_KEY,
-      callbackURL: process.env.FACEBOOK_CALLBACK_URL,
-    },
-    async function (accessToken, refreshToken, profile, cb) {
-      const user = await User.findOne({
-        accountId: profile.id,
-        provider: 'facebook',
-      });
-      if (!user) {
-        const user = new User({
-          accountId: profile.id,
-          name: profile.displayName,
-          provider: profile.provider,
-        });
-        await user.save();
-        return cb(null, profile);
-      }
-      else {
-        return cb(null, profile);
-      }
-    }
-  )
-);
-
-passport.use(
-  new FacebookStrategy(
-    {
-      clientID: process.env.FACEBOOK_CLIENT_ID,
-      clientSecret: process.env.FACEBOOK_SECRET_KEY,
-      callbackURL: process.env.FACEBOOK_CALLBACK_URL,
-    },
-    async function (accessToken, refreshToken, profile, cb) {
-      const user = await User.findOne({
-        accountId: profile.id,
-        provider: 'facebook',
-      });
-      if (!user) {
-        const user = new User({
-          accountId: profile.id,
-          name: profile.displayName,
-          provider: profile.provider,
-        });
-        await user.save();
-        return cb(null, profile);
-      }
-      else {
-        return cb(null, profile);
-      }
-    }
-  )
-);
